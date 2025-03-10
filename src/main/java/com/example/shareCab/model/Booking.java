@@ -1,5 +1,6 @@
 package com.example.shareCab.model;
 
+//lombok is used to reduce boilerplate code;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -17,10 +18,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
-@Data
+@Data //provide getters and setters;
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder //used in service implementation, provide object of class || ClassName.builder().methods().build();
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

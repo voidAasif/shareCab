@@ -28,10 +28,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDTO bookRide(BookingDTO dto) {
-        User user = userRepository.findById(dto.getUserId()).orElseThrow();
-        Ride ride = rideRepository.findById(dto.getRideId()).orElseThrow();
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(); //find user by bookingDto user id;
+        Ride ride = rideRepository.findById(dto.getRideId()).orElseThrow(); //find ride by bookingDto ride id;
 
-        Booking booking = Booking.builder()
+        Booking booking = Booking.builder() //set bookingDto into booking entity;
                 .user(user)
                 .ride(ride)
                 .bookingDate(dto.getBookingDate())
@@ -39,15 +39,15 @@ public class BookingServiceImpl implements BookingService {
                 .noOfSeats(dto.getSeatCount())
                 .build();
 
-        booking = bookingRepository.save(booking);
+        booking = bookingRepository.save(booking); //save booking entity;
         dto.setId(booking.getId());
-        return dto;
+        return dto; //return booking dto with updated booking id;
     }
 
     @Override
-    public BookingDTO getBookingById(Long id) {
-        Booking b = bookingRepository.findById(id).orElseThrow();
-        return BookingDTO.builder()
+    public BookingDTO getBookingById(Long id) { 
+        Booking b = bookingRepository.findById(id).orElseThrow(); //find booking by id;
+        return BookingDTO.builder() //convert booking into bookingDto;
                 .id(b.getId())
                 .userId(b.getUser().getId())
                 .rideId(b.getRide().getId())
@@ -58,8 +58,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDTO> getAllBookings() {
-        return bookingRepository.findAll().stream().map(b -> BookingDTO.builder()
+    public List<BookingDTO> getAllBookings() { //return bookingDto list of all bookings;
+        return bookingRepository.findAll().stream().map(b -> BookingDTO.builder() //findAll -> fetch all booking | stream.map -> get entries oneByOne | and set booking into bookingDto;
                 .id(b.getId())
                 .userId(b.getUser().getId())
                 .rideId(b.getRide().getId())
@@ -67,7 +67,7 @@ public class BookingServiceImpl implements BookingService {
                 .seatCount(b.getNoOfSeats())
                 .bookingStatus(b.getBookingStatus())
                 .build()
-        ).collect(Collectors.toList());
+        ).collect(Collectors.toList()); //set all converted bookingDto into List;
     }
 
     @Override
