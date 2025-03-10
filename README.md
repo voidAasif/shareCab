@@ -19,18 +19,18 @@ This system helps:
 - 🕒 Save time and travel together  
 - 💸 Make travel more affordable and efficient  
 
-Right now, it works behind the scenes (the backend part), and in the future, it can be connected to a mobile app or a website for users to interact with easily.
+Right now, it works behind the scenes (the backend part), and **my friend is currently working on developing a website** to make it easy for users to interact with the system.
 
 ---
 
 # 📩 Contact Me
 
 **Aasif**  
-📧 Email: [a786has@gmail.com](mailto:aasifsaifi9280@gmail.com)  
+📧 Email: [Contact](mailto:aasifsaifi9280@gmail.com)  
 🌐 Portfolio: [Visit](https://voidaasif.github.io/aasif/)
 
 ---
 
 # 🤝 Also check out my friend’s work
 
-🔗 Friend’s Repository: [Frontend Repo Link]((https://github.com/shakir258/shareCab))
+🔗 Friend’s Repository: [Frontend Repo Link](https://github.com/shakir258/shareCab)
