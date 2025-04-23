@@ -6,15 +6,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
-    private Long id;
+public class UserSignupDTO {
+    // private long id;
     private String firstName;
     private String lastName;
     private String email;
-    private String phoneNo;
-    private String address;
-    private String profilePhoto;
-    private String aadhar;
-    private String role;
+    private String password;
 }
 

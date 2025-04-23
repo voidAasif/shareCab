@@ -1,13 +1,13 @@
 package com.example.shareCab.service;
 
-import com.example.shareCab.dto.UserDTO;
+import com.example.shareCab.dto.UserSignupDTO;
 
 import java.util.List;
 
 public interface UserService {
-    UserDTO registerUser(UserDTO userDTO);
-    UserDTO getUserById(Long id);
-    List<UserDTO> getAllUsers();
+    UserSignupDTO registerUser(UserSignupDTO userSignupDTO);
+    UserSignupDTO getUserById(Long id);
+    List<UserSignupDTO> getAllUsers();
     void deleteUser(Long id);
 }
 

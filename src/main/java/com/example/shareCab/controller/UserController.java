@@ -1,6 +1,6 @@
 package com.example.shareCab.controller;
 
-import com.example.shareCab.dto.UserDTO;
+import com.example.shareCab.dto.UserSignupDTO;
 import com.example.shareCab.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,17 +15,17 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public UserDTO register(@RequestBody UserDTO userDTO) {
-        return userService.registerUser(userDTO);
+    public UserSignupDTO register(@RequestBody UserSignupDTO userSignupDTO) {
+        return userService.registerUser(userSignupDTO);
     }
 
     @GetMapping("/{id}")
-    public UserDTO getUser(@PathVariable Long id) {
+    public UserSignupDTO getUser(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @GetMapping("/")
-    public List<UserDTO> getAllUsers() {
+    public List<UserSignupDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 

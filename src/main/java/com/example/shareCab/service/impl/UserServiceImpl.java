@@ -1,6 +1,6 @@
 package com.example.shareCab.service.impl;
 
-import com.example.shareCab.dto.UserDTO;
+import com.example.shareCab.dto.UserSignupDTO;
 import com.example.shareCab.model.User;
 import com.example.shareCab.repository.UserRepository;
 import com.example.shareCab.service.UserService;
@@ -17,51 +17,34 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public UserDTO registerUser(UserDTO dto) {
+    public UserSignupDTO registerUser(UserSignupDTO dto) {
         User user = User.builder()
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())
-                .phoneNo(dto.getPhoneNo())
-                .address(dto.getAddress())
-                .aadhar(dto.getAadhar())
-                .role(dto.getRole())
-                .profilePhoto(dto.getProfilePhoto())
+                .password(dto.getPassword())
                 .build();
         user = userRepository.save(user);
-        dto.setId(user.getId());
         return dto;
     }
 
     @Override
-    public UserDTO getUserById(Long id) {
+    public UserSignupDTO getUserById(Long id) {
         User user = userRepository.findById(id).orElseThrow();
-        return UserDTO.builder()
-                .id(user.getId())
+        return UserSignupDTO.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .phoneNo(user.getPhoneNo())
-                .address(user.getAddress())
-                .aadhar(user.getAadhar())
-                .role(user.getRole())
-                .profilePhoto(user.getProfilePhoto())
                 .build();
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
+    public List<UserSignupDTO> getAllUsers() {
         return userRepository.findAll().stream().map(u ->
-            UserDTO.builder()
-                .id(u.getId())
+            UserSignupDTO.builder()
                 .firstName(u.getFirstName())
                 .lastName(u.getLastName())
                 .email(u.getEmail())
-                .phoneNo(u.getPhoneNo())
-                .address(u.getAddress())
-                .aadhar(u.getAadhar())
-                .role(u.getRole())
-                .profilePhoto(u.getProfilePhoto())
                 .build()
         ).collect(Collectors.toList());
     }
