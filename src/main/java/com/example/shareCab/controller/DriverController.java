@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/drivers")
+@CrossOrigin("*")
 public class DriverController {
 
     @Autowired
