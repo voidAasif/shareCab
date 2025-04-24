@@ -6,7 +6,7 @@ import com.example.shareCab.repository.UserRepository;
 import com.example.shareCab.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,15 +17,17 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public UserSignupDTO registerUser(UserSignupDTO dto) {
+    public User registerUser(UserSignupDTO userSignupDTO) {
         User user = User.builder()
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .email(dto.getEmail())
-                .password(dto.getPassword())
+                .firstName(userSignupDTO.getFirstName())
+                .lastName(userSignupDTO.getLastName())
+                .email(userSignupDTO.getEmail())
+                .password(userSignupDTO.getPassword())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
         user = userRepository.save(user);
-        return dto;
+        return user;
     }
 
     @Override

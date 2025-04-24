@@ -2,7 +2,15 @@ package com.example.shareCab.controller;
 
 import com.example.shareCab.dto.UserSignupDTO;
 import com.example.shareCab.service.UserService;
+import com.example.shareCab.web.response.BaseResponse;
+import com.example.shareCab.web.response.UserSignupResponse;
+import com.example.shareCab.model.User;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +24,26 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public UserSignupDTO register(@RequestBody UserSignupDTO userSignupDTO) {
-        return userService.registerUser(userSignupDTO);
+    public ResponseEntity<BaseResponse<UserSignupResponse>> register(@Valid @RequestBody UserSignupDTO userSignupDTO) {
+        User user = userService.registerUser(userSignupDTO);
+
+        //built response with user data;
+        UserSignupResponse response = UserSignupResponse.builder()
+                .message("User registered successfully")
+                .status("success")
+                .userId(user.getId())
+                .email(user.getEmail())
+                .createdAt(user.getCreatedAt().toString())
+                .build();
+
+        //use BaseResponse and set UserSignupResponse into data field;
+        BaseResponse<UserSignupResponse> baseResponse = BaseResponse.<UserSignupResponse>builder()
+                .status("success")
+                .message("Registration successful")
+                .data(response)
+                .build();
+
+        return new ResponseEntity<>(baseResponse, HttpStatus.CREATED); // status code: 201;
     }
 
     @GetMapping("/{id}")
