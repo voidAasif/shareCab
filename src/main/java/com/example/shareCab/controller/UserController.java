@@ -3,7 +3,7 @@ package com.example.shareCab.controller;
 import com.example.shareCab.dto.UserSignupDTO;
 import com.example.shareCab.service.UserService;
 import com.example.shareCab.web.response.BaseResponse;
-import com.example.shareCab.web.response.UserSignupResponse;
+import com.example.shareCab.web.response.SignupResponse;
 import com.example.shareCab.model.User;
 
 import jakarta.validation.Valid;
@@ -24,20 +24,20 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<BaseResponse<UserSignupResponse>> register(@Valid @RequestBody UserSignupDTO userSignupDTO) {
+    public ResponseEntity<BaseResponse<SignupResponse>> register(@Valid @RequestBody UserSignupDTO userSignupDTO) {
         User user = userService.registerUser(userSignupDTO);
 
         //built response with user data;
-        UserSignupResponse response = UserSignupResponse.builder()
+        SignupResponse response = SignupResponse.builder()
                 .message("User registered successfully")
                 .status("success")
-                .userId(user.getId())
+                .id(user.getId())
                 .email(user.getEmail())
                 .createdAt(user.getCreatedAt().toString())
                 .build();
 
         //use BaseResponse and set UserSignupResponse into data field;
-        BaseResponse<UserSignupResponse> baseResponse = BaseResponse.<UserSignupResponse>builder()
+        BaseResponse<SignupResponse> baseResponse = BaseResponse.<SignupResponse>builder()
                 .status("success")
                 .message("Registration successful")
                 .data(response)

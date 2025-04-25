@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
                 .lastName(userSignupDTO.getLastName())
                 .email(userSignupDTO.getEmail())
                 .password(userSignupDTO.getPassword())
+                .role("USER_ROlE")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

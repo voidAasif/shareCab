@@ -1,12 +1,13 @@
 package com.example.shareCab.service.impl;
 
-import com.example.shareCab.dto.DriverDTO;
+import com.example.shareCab.dto.DriverSignupDTO;
 import com.example.shareCab.model.Driver;
 import com.example.shareCab.repository.DriverRepository;
 import com.example.shareCab.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,51 +18,37 @@ public class DriverServiceImpl implements DriverService {
     private DriverRepository driverRepository;
 
     @Override
-    public DriverDTO registerDriver(DriverDTO dto) {
+    public Driver registerDriver(DriverSignupDTO driverSignupDTO) {
         Driver driver = Driver.builder()
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .email(dto.getEmail())
-                .phoneNo(dto.getPhoneNo())
-                .address(dto.getAddress())
-                .vehicleNo(dto.getVehicleNo())
-                .profilePhoto(dto.getProfilePhoto())
-                .role(dto.getRole())
+                .firstName(driverSignupDTO.getFirstName())
+                .lastName(driverSignupDTO.getLastName())
+                .email(driverSignupDTO.getEmail())
+                .password(driverSignupDTO.getPassword())
+                .role("DRIVER_ROLE")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
 
         driver = driverRepository.save(driver);
-        dto.setId(driver.getId());
-        return dto;
+        return driver;
     }
 
     @Override
-    public DriverDTO getDriverById(Long id) {
+    public DriverSignupDTO getDriverById(Long id) {
         Driver driver = driverRepository.findById(id).orElseThrow();
-        return DriverDTO.builder()
-                .id(driver.getId())
+        return DriverSignupDTO.builder()
                 .firstName(driver.getFirstName())
                 .lastName(driver.getLastName())
                 .email(driver.getEmail())
-                .phoneNo(driver.getPhoneNo())
-                .address(driver.getAddress())
-                .vehicleNo(driver.getVehicleNo())
-                .profilePhoto(driver.getProfilePhoto())
-                .role(driver.getRole())
                 .build();
     }
 
     @Override
-    public List<DriverDTO> getAllDrivers() {
-        return driverRepository.findAll().stream().map(d -> DriverDTO.builder()
-                .id(d.getId())
+    public List<DriverSignupDTO> getAllDrivers() {
+        return driverRepository.findAll().stream().map(d -> DriverSignupDTO.builder()
                 .firstName(d.getFirstName())
                 .lastName(d.getLastName())
                 .email(d.getEmail())
-                .phoneNo(d.getPhoneNo())
-                .address(d.getAddress())
-                .vehicleNo(d.getVehicleNo())
-                .profilePhoto(d.getProfilePhoto())
-                .role(d.getRole())
                 .build()
         ).collect(Collectors.toList());
     }
