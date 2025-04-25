@@ -5,6 +5,7 @@ import com.example.shareCab.model.User;
 import com.example.shareCab.repository.UserRepository;
 import com.example.shareCab.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,14 +17,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public User registerUser(UserSignupDTO userSignupDTO) {
         User user = User.builder()
                 .firstName(userSignupDTO.getFirstName())
                 .lastName(userSignupDTO.getLastName())
                 .email(userSignupDTO.getEmail())
-                .password(userSignupDTO.getPassword())
-                .role("USER_ROlE")
+                .password(passwordEncoder.encode(userSignupDTO.getPassword()))
+                .role("USER")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

@@ -5,6 +5,7 @@ import com.example.shareCab.model.Driver;
 import com.example.shareCab.repository.DriverRepository;
 import com.example.shareCab.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,14 +18,17 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     private DriverRepository driverRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public Driver registerDriver(DriverSignupDTO driverSignupDTO) {
         Driver driver = Driver.builder()
                 .firstName(driverSignupDTO.getFirstName())
                 .lastName(driverSignupDTO.getLastName())
                 .email(driverSignupDTO.getEmail())
-                .password(driverSignupDTO.getPassword())
-                .role("DRIVER_ROLE")
+                .password(passwordEncoder.encode(driverSignupDTO.getPassword()))
+                .role("DRIVER")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
