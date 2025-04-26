@@ -3,6 +3,7 @@ package com.example.shareCab.controller;
 import com.example.shareCab.jwt.JwtUtils;
 import com.example.shareCab.userdetails.CombinedUserDetailsService;
 import com.example.shareCab.web.request.JwtRequest;
+import com.example.shareCab.web.response.BaseResponse;
 import com.example.shareCab.web.response.JwtResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +34,26 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody JwtRequest jwtRequest) {
-        try {
-            authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword())
-            );
 
-            UserDetails userDetails = combinedUserDetailsService.loadUserByUsername(jwtRequest.getUsername());
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword())
+        );
 
-            String jwtToken = jwtUtils.generateToken(userDetails);
+        UserDetails userDetails = combinedUserDetailsService.loadUserByUsername(jwtRequest.getUsername());
 
-            return ResponseEntity.ok(new JwtResponse(jwtToken)); // Return the JWT token
+        //generate JWT token;
+        String jwtToken = jwtUtils.generateToken(userDetails);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
+        //set JWT token into response;
+        JwtResponse jwtResponse = new JwtResponse(jwtToken);
+
+        //set response into baseResponse;
+        BaseResponse<JwtResponse> response = BaseResponse.<JwtResponse>builder()
+            .status("success")
+            .message("Login successful")
+            .data(jwtResponse)
+            .build();
+
+        return ResponseEntity.ok(response);
     }
 }

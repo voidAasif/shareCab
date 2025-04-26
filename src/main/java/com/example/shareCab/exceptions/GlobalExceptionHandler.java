@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,6 +17,7 @@ import com.example.shareCab.web.response.BaseResponse;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // 1. Validation errors (@Valid) → 400 BAD REQUEST
     //MethodArgumentNotValidException: this exception throws when some error occurs while validation(@Valid), so its auto execute this handleValidationExceptions method;
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponse<List<Map<String, String>>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -39,4 +41,32 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); //and return the exception | status code: 400;
     }
+
+    // 2. Invalid username/password → 401 UNAUTHORIZED
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<BaseResponse<Object>> handleBadCredentialsException(BadCredentialsException ex) {
+
+        BaseResponse<Object> response = BaseResponse.builder()
+                .status("fail")
+                .message("Invalid username or password")
+                .data(null)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    // 3. Catch-all handler → 500 INTERNAL SERVER ERROR
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<BaseResponse<Object>> handleAllOtherExceptions(Exception ex) {
+
+        BaseResponse<Object> response = BaseResponse.builder()
+                .status("error")
+                .message("An unexpected error occurred")
+                .data(null)
+                .build();
+
+        ex.printStackTrace(); // optional: print to console for debugging
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    } 
 }
