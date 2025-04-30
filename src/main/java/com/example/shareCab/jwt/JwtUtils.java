@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.example.shareCab.userdetails.CustomUserDetails;
+import com.example.shareCab.userdetails.CustomDriverDetails;
+
 @Service
 public class JwtUtils {
 
@@ -37,16 +40,28 @@ public class JwtUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+    Map<String, Object> claims = new HashMap<>();
+
+    //add roles into token;
+    if (userDetails instanceof @SuppressWarnings("unused") CustomUserDetails CustomUserDetails) {
+        claims.put("role", "USER");
+    }
+    if (userDetails instanceof @SuppressWarnings("unused") CustomDriverDetails customDriverDetails) {
+        claims.put("role", "DRIVER");
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    return createToken(claims, userDetails.getUsername());
+}
 
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
-    }
+private String createToken(Map<String, Object> claims, String subject) {
+    return Jwts.builder()
+            .setClaims(claims)
+            .setSubject(subject)
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+            .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+            .compact();
+}
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
