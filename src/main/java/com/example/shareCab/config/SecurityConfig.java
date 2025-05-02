@@ -56,6 +56,14 @@ public class SecurityConfig {
     @Bean // Defines security rules and configurations for handling requests;
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { //view access configuration;
         http
+            .cors(cors -> cors.configurationSource(request -> {
+                var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                corsConfig.setAllowedOrigins(List.of("http://localhost:5173"));
+                corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                corsConfig.setAllowedHeaders(List.of("*"));
+                corsConfig.setAllowCredentials(true);
+                return corsConfig;
+            }))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth //config for authentication;
