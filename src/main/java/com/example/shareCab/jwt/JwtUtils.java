@@ -3,6 +3,8 @@ package com.example.shareCab.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,20 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.example.shareCab.userdetails.CustomUserDetails;
+import com.example.shareCab.model.User;
+import com.example.shareCab.model.Driver;
+import com.example.shareCab.repository.DriverRepository;
+import com.example.shareCab.repository.UserRepository;
 import com.example.shareCab.userdetails.CustomDriverDetails;
 
 @Service
 public class JwtUtils {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private DriverRepository driverRepository;
 
     private String SECRET_KEY = "CustomSecretKey";
 
@@ -40,15 +52,21 @@ public class JwtUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
-    Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();
 
-    //add roles into token;
-    if (userDetails instanceof @SuppressWarnings("unused") CustomUserDetails CustomUserDetails) {
-        claims.put("role", "USER");
-    }
-    if (userDetails instanceof @SuppressWarnings("unused") CustomDriverDetails customDriverDetails) {
-        claims.put("role", "DRIVER");
-    }
+        //add roles into token;
+        if (userDetails instanceof @SuppressWarnings("unused") CustomUserDetails customUserDetails) {
+            String email = userDetails.getUsername();
+            User user = userRepository.findByEmail(email);
+            claims.put("id", user.getId());
+            claims.put("role", "USER");
+        }
+        if (userDetails instanceof @SuppressWarnings("unused") CustomDriverDetails customDriverDetails) {
+            String email = userDetails.getUsername();
+            Driver driver = driverRepository.findByEmail(email);
+            claims.put("id", driver.getId());
+            claims.put("role", "DRIVER");
+        }
 
     return createToken(claims, userDetails.getUsername());
 }
