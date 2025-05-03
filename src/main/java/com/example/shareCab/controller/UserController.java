@@ -1,5 +1,6 @@
 package com.example.shareCab.controller;
 
+import com.example.shareCab.dto.ProfileDTO;
 import com.example.shareCab.dto.UserSignupDTO;
 import com.example.shareCab.service.UserService;
 import com.example.shareCab.web.response.BaseResponse;
@@ -45,9 +46,28 @@ public class UserController {
         return new ResponseEntity<>(baseResponse, HttpStatus.CREATED); // status code: 201;
     }
 
-    @GetMapping("/{id}")
-    public UserSignupDTO getUser(@PathVariable Long id) {
-        return userService.getUserById(id);
+    @GetMapping("/{id}") //get user profile;
+    public ResponseEntity<BaseResponse<ProfileDTO>> getUserProfile(@PathVariable Long id) {
+
+        BaseResponse<ProfileDTO> baseResponse = BaseResponse.<ProfileDTO>builder()
+                .status("success")
+                .message("Profile Fetch Successful")
+                .data(userService.getUserById(id))
+                .build();
+
+        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}") //update user profile;
+    public ResponseEntity<BaseResponse<ProfileDTO>> updateUser(@PathVariable Long id, @RequestBody ProfileDTO profileDTO) {
+
+        BaseResponse<ProfileDTO> baseResponse = BaseResponse.<ProfileDTO>builder()
+                .status("success")
+                .message("Profile Update Successful")
+                .data(userService.updateUserProfile(id, profileDTO))
+                .build();
+
+        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
     }
 
     @GetMapping("/")

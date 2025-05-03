@@ -69,4 +69,17 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     } 
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<BaseResponse<Object>> resourceNotFoundExceptions(ResourceNotFoundException ex) {
+        BaseResponse<Object> response = BaseResponse.builder()
+                .status("error")
+                .message(ex.getMessage())
+                .data(null)
+                .build();
+
+        ex.printStackTrace();
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }

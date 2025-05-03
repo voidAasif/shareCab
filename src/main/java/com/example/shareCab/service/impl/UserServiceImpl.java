@@ -1,6 +1,8 @@
 package com.example.shareCab.service.impl;
 
+import com.example.shareCab.dto.ProfileDTO;
 import com.example.shareCab.dto.UserSignupDTO;
+import com.example.shareCab.exceptions.ResourceNotFoundException;
 import com.example.shareCab.model.User;
 import com.example.shareCab.repository.UserRepository;
 import com.example.shareCab.service.UserService;
@@ -36,12 +38,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserSignupDTO getUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        return UserSignupDTO.builder()
+    public ProfileDTO getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("userId: " + id + " | Not found in DB"));
+        return ProfileDTO.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .email(user.getEmail())
+                .phoneNo(user.getPhoneNo())
+                .address(user.getAddress())
+                .profilePhoto(user.getProfilePhoto())
+                .aadhar(user.getAadhar())
+                .rating(user.getRating())
+                .totalRides(user.getTotalRides())
+                .lastRideDate(user.getLastRideDate())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    public ProfileDTO updateUserProfile(Long id, ProfileDTO profileDTO) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("userId: " + id + " | Not found in DB"));
+
+        // Update fields
+        user.setFirstName(profileDTO.getFirstName());
+        user.setLastName(profileDTO.getLastName());
+        user.setPhoneNo(profileDTO.getPhoneNo());
+        user.setAddress(profileDTO.getAddress());
+        user.setProfilePhoto(profileDTO.getProfilePhoto());
+        user.setAadhar(profileDTO.getAadhar());
+        user.setUpdatedAt(LocalDateTime.now()); // update timestamp
+
+        // Save updated user
+        userRepository.save(user);
+
+        // Return updated ProfileDTO
+        return ProfileDTO.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNo(user.getPhoneNo())
+                .address(user.getAddress())
+                .profilePhoto(user.getProfilePhoto())
+                .aadhar(user.getAadhar())
+                .rating(user.getRating())
+                .totalRides(user.getTotalRides())
+                .lastRideDate(user.getLastRideDate())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 
