@@ -1,6 +1,8 @@
 package com.example.shareCab.service.impl;
 
+import com.example.shareCab.dto.DriverProfileDTO;
 import com.example.shareCab.dto.DriverSignupDTO;
+import com.example.shareCab.exceptions.ResourceNotFoundException;
 import com.example.shareCab.model.Driver;
 import com.example.shareCab.repository.DriverRepository;
 import com.example.shareCab.service.DriverService;
@@ -38,12 +40,74 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public DriverSignupDTO getDriverById(Long id) {
-        Driver driver = driverRepository.findById(id).orElseThrow();
-        return DriverSignupDTO.builder()
+    public DriverProfileDTO getDriverById(Long id) {
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("driverId: " + id + " | Not found in DB"));
+        return DriverProfileDTO.builder()
                 .firstName(driver.getFirstName())
                 .lastName(driver.getLastName())
-                .email(driver.getEmail())
+                .aadhar(driver.getAadhar())
+                .phoneNo(driver.getPhoneNo())
+                .address(driver.getAddress())
+                .vehicleNo(driver.getVehicleNo())
+                .profilePhoto(driver.getProfilePhoto())
+                .drivingLicense(driver.getDrivingLicense())
+                .availableStatus(driver.getAvailableStatus())
+                .rating(driver.getRating())
+                .totalTrips(driver.getTotalTrips())
+                .vehicleType(driver.getVehicleType())
+                .vehicleModel(driver.getVehicleModel())
+                .vehicleColor(driver.getVehicleColor())
+                .availableSeats(driver.getAvailableSeats())
+                .lastRideDate(driver.getLastRideDate())
+                .createdAt(driver.getCreatedAt())
+                .updatedAt(driver.getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    public DriverProfileDTO updateDriverProfile(Long id, DriverProfileDTO driverProfileDTO) {
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("driverId: " + id + " | Not found in DB"));
+
+        // Update fields only if they are non-null
+        if (driverProfileDTO.getFirstName() != null) driver.setFirstName(driverProfileDTO.getFirstName());
+        if (driverProfileDTO.getLastName() != null) driver.setLastName(driverProfileDTO.getLastName());
+        if (driverProfileDTO.getAadhar() != null) driver.setAadhar(driverProfileDTO.getAadhar());
+        if (driverProfileDTO.getPhoneNo() != null) driver.setPhoneNo(driverProfileDTO.getPhoneNo());
+        if (driverProfileDTO.getAddress() != null) driver.setAddress(driverProfileDTO.getAddress());
+        if (driverProfileDTO.getVehicleNo() != null) driver.setVehicleNo(driverProfileDTO.getVehicleNo());
+        if (driverProfileDTO.getProfilePhoto() != null) driver.setProfilePhoto(driverProfileDTO.getProfilePhoto());
+        if (driverProfileDTO.getDrivingLicense() != null) driver.setDrivingLicense(driverProfileDTO.getDrivingLicense());
+        if (driverProfileDTO.getVehicleType() != null) driver.setVehicleType(driverProfileDTO.getVehicleType());
+        if (driverProfileDTO.getVehicleModel() != null) driver.setVehicleModel(driverProfileDTO.getVehicleModel());
+        if (driverProfileDTO.getVehicleColor() != null) driver.setVehicleColor(driverProfileDTO.getVehicleColor());
+        if (driverProfileDTO.getAvailableSeats() != 0) driver.setAvailableSeats(driverProfileDTO.getAvailableSeats());
+
+        driver.setUpdatedAt(LocalDateTime.now());
+
+
+        //Save Updated Driver;
+        driverRepository.save(driver);
+
+        //Return updated DriverProfileDTO;
+        return DriverProfileDTO.builder()
+                .firstName(driver.getFirstName())
+                .lastName(driver.getLastName())
+                .aadhar(driver.getAadhar())
+                .phoneNo(driver.getPhoneNo())
+                .address(driver.getAddress())
+                .vehicleNo(driver.getVehicleNo())
+                .profilePhoto(driver.getProfilePhoto())
+                .drivingLicense(driver.getDrivingLicense())
+                .availableStatus(driver.getAvailableStatus())
+                .rating(driver.getRating())
+                .totalTrips(driver.getTotalTrips())
+                .vehicleType(driver.getVehicleType())
+                .vehicleModel(driver.getVehicleModel())
+                .vehicleColor(driver.getVehicleColor())
+                .availableSeats(driver.getAvailableSeats())
+                .lastRideDate(driver.getLastRideDate())
+                .createdAt(driver.getCreatedAt())
+                .updatedAt(driver.getUpdatedAt())
                 .build();
     }
 
@@ -61,5 +125,7 @@ public class DriverServiceImpl implements DriverService {
     public void deleteDriver(Long id) {
         driverRepository.deleteById(id);
     }
+
+    
 }
 

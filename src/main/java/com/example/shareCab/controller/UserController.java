@@ -1,6 +1,6 @@
 package com.example.shareCab.controller;
 
-import com.example.shareCab.dto.ProfileDTO;
+import com.example.shareCab.dto.UserProfileDTO;
 import com.example.shareCab.dto.UserSignupDTO;
 import com.example.shareCab.service.UserService;
 import com.example.shareCab.web.response.BaseResponse;
@@ -12,7 +12,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
@@ -47,9 +54,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}") //get user profile;
-    public ResponseEntity<BaseResponse<ProfileDTO>> getUserProfile(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<UserProfileDTO>> getUserProfile(@PathVariable Long id) {
 
-        BaseResponse<ProfileDTO> baseResponse = BaseResponse.<ProfileDTO>builder()
+        BaseResponse<UserProfileDTO> baseResponse = BaseResponse.<UserProfileDTO>builder()
                 .status("success")
                 .message("Profile Fetch Successful")
                 .data(userService.getUserById(id))
@@ -59,12 +66,12 @@ public class UserController {
     }
 
     @PutMapping("/{id}") //update user profile;
-    public ResponseEntity<BaseResponse<ProfileDTO>> updateUser(@PathVariable Long id, @RequestBody ProfileDTO profileDTO) {
+    public ResponseEntity<BaseResponse<UserProfileDTO>> updateUser(@PathVariable Long id, @RequestBody UserProfileDTO userProfileDTO) {
 
-        BaseResponse<ProfileDTO> baseResponse = BaseResponse.<ProfileDTO>builder()
+        BaseResponse<UserProfileDTO> baseResponse = BaseResponse.<UserProfileDTO>builder()
                 .status("success")
                 .message("Profile Update Successful")
-                .data(userService.updateUserProfile(id, profileDTO))
+                .data(userService.updateUserProfile(id, userProfileDTO))
                 .build();
 
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);

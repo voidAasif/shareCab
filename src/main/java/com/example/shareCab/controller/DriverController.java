@@ -1,5 +1,6 @@
 package com.example.shareCab.controller;
 
+import com.example.shareCab.dto.DriverProfileDTO;
 import com.example.shareCab.dto.DriverSignupDTO;
 import com.example.shareCab.model.Driver;
 import com.example.shareCab.service.DriverService;
@@ -47,9 +48,27 @@ public class DriverController {
         return new ResponseEntity<>(baseResponse, HttpStatus.CREATED); // status code: 201;
     }
 
-    @GetMapping("/{id}")
-    public DriverSignupDTO getDriver(@PathVariable Long id) {
-        return driverService.getDriverById(id);
+    @GetMapping("/{id}") //get driver profile;
+    public ResponseEntity<BaseResponse<DriverProfileDTO>> getDriverProfile(@PathVariable Long id) {
+        BaseResponse<DriverProfileDTO> baseResponse = BaseResponse.<DriverProfileDTO>builder()
+                .status("success")
+                .message("Profile Fetch Successful")
+                .data(driverService.getDriverById(id))
+                .build();
+
+        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}") //update driver profile;
+    public ResponseEntity<BaseResponse<DriverProfileDTO>> updateUser(@PathVariable Long id, @RequestBody DriverProfileDTO driverProfileDTO) {
+
+        BaseResponse<DriverProfileDTO> baseResponse = BaseResponse.<DriverProfileDTO>builder()
+                .status("success")
+                .message("Profile Update Successful")
+                .data(driverService.updateDriverProfile(id, driverProfileDTO))
+                .build();
+
+        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
     }
 
     @GetMapping("/")

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProfileDTO {
+public class UserProfileDTO {
 
     private String firstName;
     private String lastName;

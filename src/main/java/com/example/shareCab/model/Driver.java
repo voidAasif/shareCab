@@ -31,9 +31,6 @@ public class Driver {
     private String aadhar;
 
     @Column(nullable = true)
-    private String driverId;
-
-    @Column(nullable = true)
     private String phoneNo;
 
     @Column(nullable = true)

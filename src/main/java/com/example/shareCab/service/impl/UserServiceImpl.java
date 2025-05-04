@@ -1,6 +1,6 @@
 package com.example.shareCab.service.impl;
 
-import com.example.shareCab.dto.ProfileDTO;
+import com.example.shareCab.dto.UserProfileDTO;
 import com.example.shareCab.dto.UserSignupDTO;
 import com.example.shareCab.exceptions.ResourceNotFoundException;
 import com.example.shareCab.model.User;
@@ -38,9 +38,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileDTO getUserById(Long id) {
+    public UserProfileDTO getUserById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("userId: " + id + " | Not found in DB"));
-        return ProfileDTO.builder()
+        return UserProfileDTO.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .phoneNo(user.getPhoneNo())
@@ -56,23 +56,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileDTO updateUserProfile(Long id, ProfileDTO profileDTO) {
+    public UserProfileDTO updateUserProfile(Long id, UserProfileDTO userProfileDTO) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("userId: " + id + " | Not found in DB"));
 
-        // Update fields
-        user.setFirstName(profileDTO.getFirstName());
-        user.setLastName(profileDTO.getLastName());
-        user.setPhoneNo(profileDTO.getPhoneNo());
-        user.setAddress(profileDTO.getAddress());
-        user.setProfilePhoto(profileDTO.getProfilePhoto());
-        user.setAadhar(profileDTO.getAadhar());
+        // Update fields only if they are non-null
+        if (userProfileDTO.getFirstName() != null) user.setFirstName(userProfileDTO.getFirstName());
+        if (userProfileDTO.getLastName() != null) user.setLastName(userProfileDTO.getLastName());
+        if (userProfileDTO.getPhoneNo() != null) user.setPhoneNo(userProfileDTO.getPhoneNo());
+        if (userProfileDTO.getAddress() != null) user.setAddress(userProfileDTO.getAddress());
+        if (userProfileDTO.getProfilePhoto() != null) user.setProfilePhoto(userProfileDTO.getProfilePhoto());
+        if (userProfileDTO.getAadhar() != null) user.setAadhar(userProfileDTO.getAadhar());
+
         user.setUpdatedAt(LocalDateTime.now()); // update timestamp
+
 
         // Save updated user
         userRepository.save(user);
 
-        // Return updated ProfileDTO
-        return ProfileDTO.builder()
+        // Return updated UserProfileDTO
+        return UserProfileDTO.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .phoneNo(user.getPhoneNo())
